@@ -1,0 +1,8 @@
+
+RewriteRule ^/(.*) cov/vz/iris/api/httpAccessPoint.php [NC,L]
+RewriteRule ^/ cov/vz/iris/api/httpAccessPoint.php [NC,L]
+RewriteRule ^ cov/vz/iris/api/httpAccessPoint.php [NC,L]
+
+
+Options +FollowSymLinks
+RewriteEngine On
