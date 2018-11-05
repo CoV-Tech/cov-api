@@ -122,6 +122,8 @@ class Status implements JsonSerializable{
 				return new Status(4, "unknown route error, no endPoint found", 500);
 			case "unknown route error, no response given":
 				return new Status(5, "unknown route error, no response given", 500);
+			case "node doesn't exist":
+				return new Status(6, "node not supported", 501);
 			default:
 				null;
 		}

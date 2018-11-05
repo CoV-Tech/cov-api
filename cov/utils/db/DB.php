@@ -113,7 +113,7 @@ class DB{
      * @return boolean
      */
     public function executeQuery( string $host, string $query, array $parameters = []){
-        if (preg_match("/^[^;]*$/", $query)){
+        if (preg_match("/^[^;]*$/", $query) !== 1){
             throw new CovException("Illegal characters");
         }
         $mode = self::isReadOrWrite( $query);

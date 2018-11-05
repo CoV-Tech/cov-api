@@ -44,6 +44,15 @@ class Field implements JsonSerializable{
 		return $this->name;
 	}
 	
+	public function getField( string $name){
+		foreach( $this->subFields as $subField){
+			if ($subField->getName() == $name){
+				return $subField;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @return Field[]

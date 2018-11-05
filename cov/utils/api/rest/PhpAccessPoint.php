@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
 use cov\core\debug\Logger;
+use cov\utils\db\DB;
 
 /**
  * 
@@ -12,17 +13,25 @@ class PhpAccessPoint {
 	/**
 	 * @var RoutesConfig $routes
 	 * @var Logger $logger
+	 * @var Nodes $nodes
+	 * @var DB $db
 	 */
-	private $routes, $logger;
+	private $routes, $logger, $nodes, $db;
 	
 	/**
 	 * 
+	 * @param Logger $logger
 	 * @param RoutesConfig $routes
+	 * @param Nodes $nodes
+	 * @param DB $db
 	 */
-	public function __construct( Logger $logger, RoutesConfig $routes){
-		$routes->addRoute("GET", "dev", new DevEndpoint( $routes));
+	public function __construct( Logger $logger, RoutesConfig $routes, Nodes $nodes, DB $db){
+		$routes->addRoute("GET", "{node}/{id}", new NodeEndpoint($routes, $nodes));
+		$routes->addRoute("GET", "dev", new DevEndpoint( $routes, $nodes));
 		$this->routes = $routes;
 		$this->logger = $logger;
+		$this->nodes  = $nodes;
+		$this->db     = $db;
 	}
 	
 	/**
@@ -55,7 +64,12 @@ class PhpAccessPoint {
 			return Response::createFromStatus("unknown route error, no endPoint found");
 		}
 		$request->parsedUrl( $route->parse( $this->logger, $request->getUrl()));
-		$response = $route->getEndpoint()->main( $this->logger, $request);
+		$response = null;
+		try{
+			$response = $route->getEndpoint()->main( $this->logger, $request, $this->db);
+		}catch( \Exception $e){
+			$response = new Response( new Status(-4, $e->getMessage(), 500), $e->__toString());
+		}
 		if ($response == null || $response->getStatus() == null){
 			$this->logger->write( "unknown route error, no response given for route : ".$request->getMethod()." ".$request->getUrl(), "ERROR");
 			return Response::createFromStatus("unknown route error, no response given");

@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
 use cov\core\debug\Logger;
+use cov\utils\db\DB;
 
 /**
  * 
@@ -23,12 +24,14 @@ class HttpAccessPoint {
 	 * @param Logger $logger
 	 * @param string $version
 	 * @param RoutesConfig $routes
+	 * @param Nodes $nodes
+	 * @param DB $db
 	 * @param string $auth
 	 */
-	public function __construct( Logger $logger, string $version, RoutesConfig $routes, string $auth = null){
-		$this->version = $version;
-		$this->accessPoint = new PhpAccessPoint( $logger, $routes);
-		$this->auth = $auth;
+	public function __construct( Logger $logger, string $version, RoutesConfig $routes, Nodes $nodes, DB $db, string $auth = null){
+		$this->version     = $version;
+		$this->accessPoint = new PhpAccessPoint( $logger, $routes, $nodes, $db);
+		$this->auth        = $auth;
 	}
 	
 	/**
@@ -42,14 +45,16 @@ class HttpAccessPoint {
 	/**
 	 * 
 	 * @param string $string
-	 * @return Field[]
+	 * @return Field
 	 */
-	private function parseFields( string $string) : array{
+	private function parseFields( string $string) : Field{
+		$field = null;
 		if (strlen($string) < 1){
-			return array();
+			$field = new Field( "main");
+		}else{
+			$field = new Field( "main", Field::parseFromString( $string));
 		}
-		
-		
+		return $field;
 	}
 	
 	/**
@@ -87,7 +92,7 @@ class HttpAccessPoint {
 		
 		
 		
-		$request = new Request( $newUrl, $headers, $body, $parameters, $method);
+		$request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields);
 		$response = $this->accessPoint->main( $request);
 		$responseJson = array(
 				"status" => $response->getStatus(),

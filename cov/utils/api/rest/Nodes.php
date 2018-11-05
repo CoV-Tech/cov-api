@@ -14,8 +14,9 @@ class Nodes implements JsonSerializable{
 	 * @var array $types
 	 * @var array $nodes
 	 * @var array $nodeDefaults
+	 * @var NodeController[] $controllers
 	 */
-	private $types, $nodes, $nodeDefaults;
+	private $types, $nodes, $nodeDefaults, $controllers;
 	
 	/**
 	 * 
@@ -28,13 +29,40 @@ class Nodes implements JsonSerializable{
 	/**
 	 * 
 	 * @param string $name
+	 * @param NodeController $controller
 	 */
-	public function createNode( string $name){
+	public function createNode( string $name, NodeController $controller){
 		if (!Self::isName( $name)){
 			return false;
 		}
 		$this->nodes[$name] = array();
+		$controller->setNodes( $this);
+		$this->controllers[$name] = $controller;
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param string $node
+	 * @return Field
+	 */
+	public function getDefaultFields( string $node){
+		$fields = array();
+		if (isset($this->nodeDefaults[$node])){
+			foreach( $this->nodeDefaults[$node] as $field){
+				$fields[] = new Field( $field);
+			}
+		}
+		return new Field( "main", $fields);
+	}
+	
+	/**
+	 * 
+	 * @param string $node
+	 * @return NodeController
+	 */
+	public function getController( string $node){
+		return isset( $this->controllers[$node]) ? $this->controllers[$node] : null;
 	}
 	
 	/**

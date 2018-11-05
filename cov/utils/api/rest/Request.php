@@ -15,8 +15,9 @@ class Request {
 	 * @var array $parameters
 	 * @var string $method
 	 * @var array $path
+	 * @var Field $fields
 	 */
-	private $url, $headers, $body, $parameters, $method, $path;
+	private $url, $headers, $body, $parameters, $method, $path, $fields;
 	
 	/**
 	 * 
@@ -26,13 +27,22 @@ class Request {
 	 * @param array $parameters
 	 * @param string $method
 	 */
-	public function __construct( array $url, array $headers, string $body, array $parameters, string $method){
+	public function __construct( array $url, array $headers, string $body, array $parameters, string $method, Field $fields){
 		$this->url = $url;
 		$this->headers = $headers;
 		$this->body = $body;
 		$this->parameters = $parameters;
 		$this->method = $method;
 		$this->path = array();
+		$this->fields = $fields;
+	}
+	
+	/**
+	 * 
+	 * @return Field
+	 */
+	public function getFields(){
+		return $this->fields;
 	}
 	
 	/**
