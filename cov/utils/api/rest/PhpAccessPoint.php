@@ -2,6 +2,7 @@
 
 use cov\core\debug\Logger;
 use cov\utils\db\DB;
+use \Exception as Exception;
 
 /**
  * 
@@ -26,8 +27,10 @@ class PhpAccessPoint {
 	 * @param DB $db
 	 */
 	public function __construct( Logger $logger, RoutesConfig $routes, Nodes $nodes, DB $db){
-		$routes->addRoute("GET", "{node}/{id}", new NodeEndpoint($routes, $nodes));
-		$routes->addRoute("GET", "dev", new DevEndpoint( $routes, $nodes));
+		$routes->addRoute("GET",  "{node}/{id}", new GetNodeEndpoint(  $routes, $nodes));
+		$routes->addRoute("GET",  "{node}",      new GetNodeEndpoint(  $routes, $nodes));
+		$routes->addRoute("POST", "{node}",      new POSTNodeEndpoint( $routes, $nodes));
+		$routes->addRoute("GET",  "dev",         new DevEndpoint(      $routes, $nodes));
 		$this->routes = $routes;
 		$this->logger = $logger;
 		$this->nodes  = $nodes;
@@ -67,7 +70,7 @@ class PhpAccessPoint {
 		$response = null;
 		try{
 			$response = $route->getEndpoint()->main( $this->logger, $request, $this->db);
-		}catch( \Exception $e){
+		}catch( Exception $e){
 			$response = new Response( new Status(-4, $e->getMessage(), 500), $e->__toString());
 		}
 		if ($response == null || $response->getStatus() == null){

@@ -1,14 +1,11 @@
 <?php namespace cov\utils\api\rest;
 
-use cov\core\debug\Logger;
-use cov\utils\db\DB;
-
 /**
  *
  * @author Ukhando
  *
  */
-class NodeEndpoint implements Endpoint {
+abstract class NodeEndpoint implements Endpoint {
 	
 	/**
 	 *
@@ -28,28 +25,21 @@ class NodeEndpoint implements Endpoint {
 	}
 	
 	/**
-	 *
-	 * {@inheritDoc}
-	 * @see Endpoint::main()
+	 * 
+	 * @param string $node
+	 * @return NodeController
 	 */
-	public function main( Logger $logger, Request $request, DB $db){
-		$node = $request->getPath("node");
-		$controller = $this->nodes->getController( $node);
-		if ($controller === null){
-			return Response::createFromStatus( "node doesn't exist");
-		}else{
-			if ($request->getMethod() == "GET"){
-				$fields = $request->getFields();
-				if (count($fields->getSubFields()) < 1){
-					$fields = $this->nodes->getDefaultFields( $node);
-				}
-				$tool = $controller->get( $request->getPath("id"), $fields, $db);
-				return new Response( Status::getStatus("OK"), $tool);
-			}elseif ($request->getMethod() == "POST"){
-				
-			}
-		}
-		
+	public function getController( string $node) : NodeController{
+		return $this->nodes->getController($node);
+	}
+	
+	/**
+	 * 
+	 * @param string $node
+	 * @return Field
+	 */
+	public function getDefaultFields( string $node) : Field{
+		return $this->nodes->getDefaultFields( $node);
 	}
 	
 }

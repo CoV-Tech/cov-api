@@ -60,6 +60,14 @@ class DB{
         return isset($this->hosts[$name]) ? $this->hosts[$name] : null;
     }
     
+    public function getHostNames(){
+    	$names = array();
+    	foreach ($this->hosts as $key => $value){
+    		$names[] = $key;
+    	}
+    	return $names;
+    }
+    
     /**
      * 
      * @param string $name

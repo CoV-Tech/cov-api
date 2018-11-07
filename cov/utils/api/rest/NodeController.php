@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
 use cov\utils\db\DB;
+use cov\utils\api\rest\exceptions\FunctionNotSupported;
 
 /**
  * 
@@ -33,13 +34,24 @@ abstract class NodeController {
 	}
 	
 	/**
+	 * 
+	 * @param string $node
+	 * @return Field
+	 */
+	public function getDefaultFields( string $node){
+		return $this->nodes->getDefaultFields( $node);
+	}
+	
+	/**
 	 *
 	 * @param string $parent
 	 * @param string $parentid
 	 * @param Field $fields
 	 * @param DB $database
 	 */
-	public abstract function getFromParent( string $parent, string $parentid, Field $fields, DB $database);
+	public function getFromParent( string $parent, string $parentid, Field $fields, DB $database){
+		throw new FunctionNotSupported( "getFromParent");
+	}
 	
 	/**
 	 * 
@@ -48,15 +60,29 @@ abstract class NodeController {
 	 * @param DB $database
 	 * @param Nodes $nodes
 	 */
-	public abstract function get( string $id, Field $fields, DB $database);
+	public function get( string $id, Field $fields, DB $database){
+		throw new FunctionNotSupported( "get");
+	}
+	
 	
 	/**
 	 * 
-	 * @param unknown $data
+	 * @param Field $fields
+	 * @param DB $database
+	 */
+	public function getAll( Field $fields, DB $database){
+		throw new FunctionNotSupported( "getAll");
+	}
+	
+	/**
+	 * 
+	 * @param array $data
 	 * @param DB $database
 	 * @param Nodes $nodes
 	 * @return bool
 	 */
-	public abstract function post( $data, DB $database) : bool;
+	public function post( array $data, DB $database) : bool{
+		throw new FunctionNotSupported( "post");
+	}
 	
 }

@@ -1,5 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
+use cov\utils\api\rest\exceptions\ParseException as ParseException;
+
 use \TypeError as TypeError;
 use \JsonSerializable as JsonSerializable;
 
@@ -29,11 +31,20 @@ class Field implements JsonSerializable{
 				throw new TypeError( "subFields must be an array of Field's, ".get_class($subField)." given");
 			}
 		}
-		if (!preg_match("/^[a-zA-Z0-9]*$/", $name)){
-			throw new TypeError( "name must be in the form ^[a-zA-Z0-9]*$");
+		if (preg_match( "/^[a-zA-Z]([a-zA-Z0-9_-]*[a-zA-Z0-9]+)?$/", $name) !== 1){
+			throw new TypeError( "name isn't in the correct format : ".$name." ");
 		}
 		$this->name = $name;
 		$this->subFields = $subFields;
+	}
+	
+	/**
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function isFieldSet( string $name){
+		return $this->getField($name) !== null;
 	}
 	
 	/**
@@ -44,6 +55,11 @@ class Field implements JsonSerializable{
 		return $this->name;
 	}
 	
+	/**
+	 * 
+	 * @param string $name
+	 * @return Field|NULL
+	 */
 	public function getField( string $name){
 		foreach( $this->subFields as $subField){
 			if ($subField->getName() == $name){
@@ -61,6 +77,11 @@ class Field implements JsonSerializable{
 		return $this->subFields;
 	}
 	
+	/**
+	 * 
+	 * @param string $get
+	 * @return Field
+	 */
 	public static function parseField( string $get) : Field{
 		$fields = Self::parseFromString($get);
 		if (count($fields) == 1){
@@ -104,7 +125,7 @@ class Field implements JsonSerializable{
 			try{
 				$fields[] = new Field($name, $subFields);
 			}catch( TypeError $e){
-				throw new ParseException();
+				throw new ParseException( $e);
 			}
 			if ($char == "}"){
 				return $fields;
@@ -135,9 +156,13 @@ class Field implements JsonSerializable{
 	 * @return array
 	 */
 	public function toArray() : array{
+		$subFields = array();
+		foreach ($this->subFields as $subField){
+			$subFields[] = $subField->toArray();
+		}
 		return array(
 				"name" => $this->name,
-				"subFields" => $this->subFields
+				"subFields" => $subFields
 		);
 	}
 	

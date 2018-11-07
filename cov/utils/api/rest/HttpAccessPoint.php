@@ -88,19 +88,35 @@ class HttpAccessPoint {
 				$parameters[$key] = $value;
 			}
 		}
-		$fields = $this->parseFields( isset($_GET["fields"]) ? $_GET["fields"] : "");
+		$fields = null;
+		$response = null;
+		try{
+			$fields = $this->parseFields( isset($_GET["fields"]) ? $_GET["fields"] : "");
+		}catch ( \Exception $e){
+			$response = new Response( new Status(-10, $e->getMessage(), 500), $e->__toString());
+		}
 		
-		
-		
-		$request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields);
-		$response = $this->accessPoint->main( $request);
+		if ($response === null){
+			$request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields);
+			$response = $this->accessPoint->main( $request);
+		}
 		$responseJson = array(
 				"status" => $response->getStatus(),
 				"response" => $response->getData(),
-				"response_time" => round((microtime(true) - $begin)/1000,3),
+				"response_time" => round((microtime(true) - $begin),3),
 				"version" => $this->version
 		);
 		$responseJson = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
+		if ($responseJson === false){
+			$response = Response::createFromStatus( "INTERNAL ERROR");
+			$responseJson = array(
+					"status" => $response->getStatus(),
+					"response" => $response->getData(),
+					"response_time" => round((microtime(true) - $begin),3),
+					"version" => $this->version
+			);
+			$responseJson = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
+		}
 		header( "Content-Type: application/json");
 		header( "Access-Control-Allow-Origin: *");
 		header( "Access-Control-Allow-Headers: *");

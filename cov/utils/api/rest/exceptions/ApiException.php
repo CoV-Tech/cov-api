@@ -1,13 +1,13 @@
-<?php namespace cov\core\exceptions;
+<?php namespace cov\utils\api\rest\exceptions;
 
-use \Exception as Exception;
+use cov\core\exceptions\CovException as CoVException;
 
 /**
  * 
  * @author Ukhando
  *
  */
-class CovException extends Exception{
+class ApiException extends CoVException{
 	
 	/**
 	 * 
@@ -16,7 +16,7 @@ class CovException extends Exception{
 	 * @param Exception $previous
 	 */
 	public function __construct( string $message = "", int $code = 0, $previous = null){
-	    parent::__construct( $message, $code, $previous);
+		parent::__construct( $message, $code, $previous);
 	}
 	
 }
