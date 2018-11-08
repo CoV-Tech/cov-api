@@ -1,7 +1,8 @@
-<?php namespace cov\utils\api\rest;
+<?php namespace cov\utils\api\nodes;
 
 use cov\utils\db\DB;
 use cov\utils\api\rest\exceptions\FunctionNotSupported;
+use cov\utils\api\rest\Field;
 
 /**
  * 

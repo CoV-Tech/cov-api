@@ -14,26 +14,22 @@ class PhpAccessPoint {
 	/**
 	 * @var RoutesConfig $routes
 	 * @var Logger $logger
-	 * @var Nodes $nodes
 	 * @var DB $db
 	 */
-	private $routes, $logger, $nodes, $db;
+	private $routes, $logger, $db;
 	
 	/**
 	 * 
 	 * @param Logger $logger
 	 * @param RoutesConfig $routes
-	 * @param Nodes $nodes
 	 * @param DB $db
 	 */
-	public function __construct( Logger $logger, RoutesConfig $routes, Nodes $nodes, DB $db){
-		$routes->addRoute("GET",  "{node}/{id}", new GetNodeEndpoint(  $routes, $nodes));
-		$routes->addRoute("GET",  "{node}",      new GetNodeEndpoint(  $routes, $nodes));
-		$routes->addRoute("POST", "{node}",      new POSTNodeEndpoint( $routes, $nodes));
-		$routes->addRoute("GET",  "dev",         new DevEndpoint(      $routes, $nodes));
+	public function __construct( Logger $logger, RoutesConfig $routes, DB $db){
+		if (!$routes->routeExists( "GET", "dev")){
+			$routes->addRoute("GET",  "dev", new DevEndpoint( $routes));
+		}
 		$this->routes = $routes;
 		$this->logger = $logger;
-		$this->nodes  = $nodes;
 		$this->db     = $db;
 	}
 	

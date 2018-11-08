@@ -1,6 +1,7 @@
-<?php namespace cov\utils\api\rest;
+<?php namespace cov\utils\api\nodes;
 
 use \JsonSerializable as JsonSerializable;
+use cov\utils\api\rest\Field;
 
 /**
  * 

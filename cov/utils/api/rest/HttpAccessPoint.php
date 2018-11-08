@@ -24,13 +24,12 @@ class HttpAccessPoint {
 	 * @param Logger $logger
 	 * @param string $version
 	 * @param RoutesConfig $routes
-	 * @param Nodes $nodes
 	 * @param DB $db
 	 * @param string $auth
 	 */
-	public function __construct( Logger $logger, string $version, RoutesConfig $routes, Nodes $nodes, DB $db, string $auth = null){
+	public function __construct( Logger $logger, string $version, RoutesConfig $routes, DB $db, string $auth = null){
 		$this->version     = $version;
-		$this->accessPoint = new PhpAccessPoint( $logger, $routes, $nodes, $db);
+		$this->accessPoint = new PhpAccessPoint( $logger, $routes, $db);
 		$this->auth        = $auth;
 	}
 	

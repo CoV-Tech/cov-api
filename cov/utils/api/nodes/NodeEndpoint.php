@@ -1,4 +1,8 @@
-<?php namespace cov\utils\api\rest;
+<?php namespace cov\utils\api\nodes;
+
+use cov\utils\api\rest\RoutesConfig;
+use cov\utils\api\rest\Endpoint;
+use cov\utils\api\rest\Field;
 
 /**
  *
@@ -22,6 +26,15 @@ abstract class NodeEndpoint implements Endpoint {
 	public function __construct( RoutesConfig $routes, Nodes $nodes){
 		$this->routes = $routes;
 		$this->nodes  = $nodes;
+	}
+	
+	/**
+	 * 
+	 * @param string $node
+	 * @return bool
+	 */
+	public function nodeExists( string $node) : bool{
+		return $this->nodes->nodeExists( $node);
 	}
 	
 	/**

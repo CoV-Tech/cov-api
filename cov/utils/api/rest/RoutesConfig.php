@@ -39,6 +39,21 @@ class RoutesConfig {
 		$this->routes[] = new Route( $method, $this->base, trim($url, "/"), $endpoint);
 	}
 	
+	/**
+	 * 
+	 * @param string $method
+	 * @param string $url
+	 * @return boolean
+	 */
+	public function routeExists( string $method, string $url){
+		foreach ($this->routes as $route){
+			if (($route->getUrl() === $url || $route->getUrl() === $route->getBaseUrl()."/".$url) && $route->getMethod() === $method){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public function getAllRoutes(){
 		return $this->routes;
 	}
