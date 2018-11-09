@@ -2,6 +2,7 @@
 
 use cov\core\debug\Logger;
 use cov\utils\db\DB;
+use cov\utils\Web;
 
 /**
  * 
@@ -105,8 +106,8 @@ class HttpAccessPoint {
 				"response_time" => round((microtime(true) - $begin),3),
 				"version" => $this->version
 		);
-		$responseJson = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
-		if ($responseJson === false){
+		$responseText = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
+		if ($responseText === false){
 			$response = Response::createFromStatus( "INTERNAL ERROR");
 			$responseJson = array(
 					"status" => $response->getStatus(),
@@ -114,18 +115,21 @@ class HttpAccessPoint {
 					"response_time" => round((microtime(true) - $begin),3),
 					"version" => $this->version
 			);
-			$responseJson = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
+			$responseText = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
 		}
+		$last_updated = isset($responseJson["response"]["last_updated"]) ? $responseJson["response"]["last_updated"] : time();
+		
 		header( "Content-Type: application/json");
 		header( "Access-Control-Allow-Origin: *");
 		header( "Access-Control-Allow-Headers: *");
 		header( "Content-Language: en");
 		header( "Date: ".gmdate('D, d M Y H:i:s T'));
+		header( "Last-Modified: ".gmdate( 'D, d M Y H:i:s T', $last_updated));
 		if ($this->auth !== null){
 			header( 'WWW-Authenticate: Bearer realm="'.$this->auth.'"');
 		}
 		header( "Tk: !");
-		header( "Content-Length: ".strlen($responseJson));
+		header( "Content-Length: ".strlen($responseText));
 		header( $response->getStatus()->getStatusHeader());
 		
 		if ($http){
@@ -133,9 +137,22 @@ class HttpAccessPoint {
 		}else{
 			header( "HTTP/1.1 200 OK");
 		}
-		if ($_SERVER['REQUEST_METHOD'] != "HEAD"){
-			echo $responseJson;
+		if (Web::getHeader( "If-Modified-Since") !== null){
+			$time = \DateTime::createFromFormat( 'D, d M Y H:i:s T', Web::getHeader( "If-Modified-Since"))->getTimestamp();
+			if ($time >= $last_updated){
+				header( "HTTP/1.1 304 Not Modified");
+			}else{
+				if ($_SERVER['REQUEST_METHOD'] != "HEAD"){
+					echo $responseText;
+				}
+			}
+		}else{
+			if ($_SERVER['REQUEST_METHOD'] != "HEAD"){
+				echo $responseText;
+			}
 		}
+		
+
 	}
 	
 	
