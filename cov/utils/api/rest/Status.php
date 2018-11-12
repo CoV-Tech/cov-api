@@ -126,6 +126,8 @@ class Status implements JsonSerializable{
 				return new Status(6, "node not supported", 501);
 			case "INTERNAL ERROR":
 				return new Status(7, "INTERNAL ERROR WHILE PARSING THE RESPONSE", 500);
+            case "not authorized":
+                return new Status( 8, "not authorized", 401);
 			default:
 				null;
 		}

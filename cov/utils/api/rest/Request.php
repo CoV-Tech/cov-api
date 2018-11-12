@@ -102,6 +102,10 @@ class Request {
 	public function getHeader( string $key){
 		return isset($this->headers[$key]) ? $this->headers[$key] : null;
 	}
+
+	public function getToken( ){
+	    return "";
+    }
 	
 	/**
 	 * 
@@ -124,7 +128,7 @@ class Request {
 	 * 
 	 * @return string
 	 */
-	public function getUrl(){
+	public function getUrl() : string{
 		return implode( "/", $this->url);
 	}
 	

@@ -41,15 +41,16 @@ class Response {
 	public function getStatus(){
 		return $this->status;
 	}
-	
-	/**
-	 * 
-	 * @param string $message
-	 * @return Response
-	 */
-	public static function createFromStatus( string $message){
+
+    /**
+     *
+     * @param string $message
+     * @param null $data
+     * @return Response
+     */
+	public static function createFromStatus( string $message, $data = null){
 		$status = Status::getStatus($message);
-		return new Response($status);
+		return new Response($status, $data);
 	}
 	
 }

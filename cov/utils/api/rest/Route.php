@@ -18,13 +18,14 @@ class Route implements JsonSerializable{
 	 * @var string $method
 	 */
 	private $baseurl, $url, $endpoint, $method;
-	
-	/**
-	 *
-	 * @param string $method
-	 * @param string $url
-	 * @param Endpoint $endpoint
-	 */
+
+    /**
+     *
+     * @param string $method
+     * @param string $baseurl
+     * @param string $url
+     * @param Endpoint $endpoint
+     */
 	public function __construct( string $method, string $baseurl, string $url, Endpoint $endpoint){
 		$this->baseurl = trim( $baseurl, "/");
 		$this->method = $method;

@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
 use cov\core\debug\Logger;
+use cov\utils\api\auth\Authenticator;
 use cov\utils\db\DB;
 use cov\utils\Web;
 
@@ -15,7 +16,7 @@ class HttpAccessPoint {
 	 * 
 	 * @var string $version
 	 * @var PhpAccessPoint $accessPoint
-	 * @var string $auth
+	 * @var Authenticator $auth
 	 * @var Logger $logger
 	 */
 	private $version, $accessPoint, $auth, $logger;
@@ -26,12 +27,16 @@ class HttpAccessPoint {
 	 * @param string $version
 	 * @param RoutesConfig $routes
 	 * @param DB $db
-	 * @param string $auth
+	 * @param Authenticator $auth
 	 */
-	public function __construct( Logger $logger, string $version, RoutesConfig $routes, DB $db, string $auth = null){
-		$this->version     = $version;
-		$this->accessPoint = new PhpAccessPoint( $logger, $routes, $db);
-		$this->auth        = $auth;
+	public function __construct( Logger $logger, string $version, RoutesConfig $routes, DB $db, Authenticator $auth = null){
+		$this->version = $version;
+		if ($auth !== null){
+            $this->accessPoint = new PhpAccessPoint( $logger, $routes, $db, $auth);
+        }else{
+            $this->accessPoint = new PhpAccessPoint( $logger, $routes, $db);
+        }
+		$this->auth = $auth;
 	}
 	
 	/**
@@ -41,12 +46,13 @@ class HttpAccessPoint {
 	public function getBaseUrl() : string{
 		return $this->accessPoint->getBaseUrl();
 	}
-	
-	/**
-	 * 
-	 * @param string $string
-	 * @return Field
-	 */
+
+    /**
+     *
+     * @param string $string
+     * @return Field
+     * @throws exceptions\ParseException
+     */
 	private function parseFields( string $string) : Field{
 		$field = null;
 		if (strlen($string) < 1){
@@ -126,7 +132,7 @@ class HttpAccessPoint {
 		header( "Date: ".gmdate('D, d M Y H:i:s T'));
 		header( "Last-Modified: ".gmdate( 'D, d M Y H:i:s T', $last_updated));
 		if ($this->auth !== null){
-			header( 'WWW-Authenticate: Bearer realm="'.$this->auth.'"');
+			header( 'WWW-Authenticate: Bearer realm="'.$this->auth->getRealm().'"');
 		}
 		header( "Tk: !");
 		header( "Content-Length: ".strlen($responseText));
