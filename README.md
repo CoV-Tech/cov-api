@@ -1,6 +1,6 @@
 # CoV API
 
-This api is based on the [Graph API from Facebook](https://developers.facebook.com/docs/graph-api/) <br>
+This api is based on [GraphQL](https://graphql.org/) and [REST](https://restfulapi.net/) <br>
 The utilisation is ```[base_url]/[node](/{id}(/[edge]))?http={true|false}(&fields={fields})``` <br>
 the **node** is the object you want to do the operation on <br>
 the **id** is the node id you want to get <br>
