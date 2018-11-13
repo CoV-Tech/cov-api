@@ -29,7 +29,7 @@ abstract class AuthEndpoint implements Endpoint{
      * @param string $password
      * @param DB $db
      * @return Token
-     * @throws WrongUsernameOrPassword
+     * @throws exceptions\WrongUsernameOrPassword
      */
     public function login( string $username, string $password, DB $db) : Token{
         return $this->authenticator->login( $username, $password, $db);

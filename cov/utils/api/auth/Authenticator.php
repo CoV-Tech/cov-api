@@ -1,5 +1,6 @@
 <?php namespace cov\utils\api\auth;
 
+use cov\utils\api\auth\exceptions\WrongUsernameOrPassword;
 use cov\utils\db\DB;
 
 /**
