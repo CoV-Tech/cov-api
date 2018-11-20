@@ -1,5 +1,7 @@
 # CoV API
 
+Get the javascript client [cov-api-client-js](https://github.com/CoV-Tech/cov-api-client-js) <br>
+<br>
 This api is based on [GraphQL](https://graphql.org/) and [REST](https://restfulapi.net/) <br>
 The utilisation is ```[base_url]/[node](/{id}(/[edge]))?http={true|false}(&fields={fields})``` <br>
 the **node** is the object you want to do the operation on <br>
