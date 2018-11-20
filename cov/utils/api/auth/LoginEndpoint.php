@@ -45,7 +45,7 @@ class LoginEndpoint extends AuthEndpoint{
             return new Response( new Status(4920, "Authentication must be Basic", 401));
         }
         try{
-            $token = $this->login( $username, $password, $db);
+            $token = $this->login( $username, $password, $db, $logger);
         }catch( WrongUsernameOrPassword $e){
             return new Response( new Status( 60154, "Wrong username or password", 401));
         }

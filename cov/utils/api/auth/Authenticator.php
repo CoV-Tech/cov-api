@@ -1,5 +1,6 @@
 <?php namespace cov\utils\api\auth;
 
+use cov\core\debug\Logger;
 use cov\utils\api\auth\exceptions\WrongUsernameOrPassword;
 use cov\utils\db\DB;
 
@@ -35,11 +36,12 @@ abstract class Authenticator
      * @param string $username
      * @param string $password
      * @param DB $db
+     * @param Logger $logger
      * @return Token
      * @throws WrongUsernameOrPassword
      */
-    public function login(string $username, string $password, DB $db) : Token{
-        if (!$this->checkUsernamePasswordCombo( $username, $password, $db)){
+    public function login(string $username, string $password, DB $db, Logger $logger) : Token{
+        if (!$this->checkUsernamePasswordCombo( $username, $password, $db, $logger)){
             throw new WrongUsernameOrPassword();
         }
         do{
@@ -64,7 +66,7 @@ abstract class Authenticator
         if (!$tok->isValid()){
             return false;
         }
-        if ($tok->getGivenTime() > time()-3600){
+        if ($tok->getTimeGiven() > time()-3600){
             return true;
         }
         return false;
@@ -88,9 +90,10 @@ abstract class Authenticator
      * @param string $username
      * @param string $password
      * @param DB $db
+     * @param Logger $logger
      * @return bool
      */
-    public abstract function checkUsernamePasswordCombo( string $username, string $password, DB $db) : bool;
+    public abstract function checkUsernamePasswordCombo( string $username, string $password, DB $db, Logger $logger) : bool;
 
     public function logout($token, $db){}
 

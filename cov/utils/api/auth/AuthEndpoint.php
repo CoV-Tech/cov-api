@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\auth;
 
 
+use cov\core\debug\Logger;
 use cov\utils\api\rest\Endpoint;
 use cov\utils\db\DB;
 
@@ -28,11 +29,12 @@ abstract class AuthEndpoint implements Endpoint{
      * @param string $username
      * @param string $password
      * @param DB $db
+     * @param Logger $logger
      * @return Token
      * @throws exceptions\WrongUsernameOrPassword
      */
-    public function login( string $username, string $password, DB $db) : Token{
-        return $this->authenticator->login( $username, $password, $db);
+    public function login( string $username, string $password, DB $db, Logger $logger) : Token{
+        return $this->authenticator->login( $username, $password, $db, $logger);
     }
 
     /**

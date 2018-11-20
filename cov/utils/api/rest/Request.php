@@ -16,18 +16,21 @@ class Request {
 	 * @var string $method
 	 * @var array $path
 	 * @var Field $fields
+     * @var string $token
 	 */
-	private $url, $headers, $body, $parameters, $method, $path, $fields;
-	
-	/**
-	 * 
-	 * @param array $url
-	 * @param array $headers
-	 * @param string $body
-	 * @param array $parameters
-	 * @param string $method
-	 */
-	public function __construct( array $url, array $headers, string $body, array $parameters, string $method, Field $fields){
+	private $url, $headers, $body, $parameters, $method, $path, $fields, $token;
+
+    /**
+     *
+     * @param array $url
+     * @param array $headers
+     * @param string $body
+     * @param array $parameters
+     * @param string $method
+     * @param Field $fields
+     * @param string $token
+     */
+	public function __construct( array $url, array $headers, string $body, array $parameters, string $method, Field $fields, string $token = null){
 		$this->url = $url;
 		$this->headers = $headers;
 		$this->body = $body;
@@ -35,7 +38,9 @@ class Request {
 		$this->method = $method;
 		$this->path = array();
 		$this->fields = $fields;
+		$this->token = $token;
 	}
+
 	
 	/**
 	 * 
@@ -104,7 +109,7 @@ class Request {
 	}
 
 	public function getToken( ){
-	    return "";
+	    return $this->token;
     }
 	
 	/**

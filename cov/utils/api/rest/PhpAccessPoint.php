@@ -30,7 +30,7 @@ class PhpAccessPoint {
      */
 	public function __construct( Logger $logger, RoutesConfig $routes, DB $db, Authenticator $auth = null){
 	    $this->devs = array();
-		$routes->addRoute( "GET", "", new DefaultEndpoint());
+		$routes->addRoute( "GET", "", new DefaultEndpoint($auth));
 		if ($auth !== null){
 		    $routes->addRoute( "POST", "auth/login",  new LoginEndpoint(  $auth)); /* LOGIN   */
             //$routes->addRoute( "GET",  "auth/logout", new LogoutEndpoint( $auth)); /* LOGOUT  */
@@ -81,7 +81,8 @@ class PhpAccessPoint {
 		$response = null;
 
 		if (!in_array($route->getUrl(), $this->devs) && $this->auth !== null){
-		    if (!$this->auth->isTokenValid( $request->getToken(), $this->db)){
+		    $token = $request->getToken();
+		    if ($token === null || !$this->auth->isTokenValid( $request->getToken(), $this->db)){
 		        return Response::createFromStatus( "not authorized", array( "login_url" => $route->getBaseUrl()."/auth/login"));
             }
         }

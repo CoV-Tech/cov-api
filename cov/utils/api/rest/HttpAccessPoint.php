@@ -103,7 +103,22 @@ class HttpAccessPoint {
 		}
 		
 		if ($response === null){
-			$request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields);
+		    $token = null;
+		    if ($this->auth){
+                $token = Web::getHeader( "Authorization");
+                $token = explode( " ", $token);
+                if ($token[0] == "Bearer"){
+                    $token = isset($token[1]) ? $token[1] : null;
+                }else{
+                    $token = null;
+                }
+            }
+            $request = null;
+            if ($token === null){
+                $request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields);
+            }else{
+                $request = new Request( $newUrl, $headers, $body, $parameters, $method, $fields, $token);
+            }
 			$response = $this->accessPoint->main( $request);
 		}
 		$responseJson = array(

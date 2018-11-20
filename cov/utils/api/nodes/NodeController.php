@@ -42,46 +42,50 @@ abstract class NodeController {
 	public function getDefaultFields( string $node){
 		return $this->nodes->getDefaultFields( $node);
 	}
-	
-	/**
-	 *
-	 * @param string $parent
-	 * @param string $parentid
-	 * @param Field $fields
-	 * @param DB $database
-	 */
+
+    /**
+     *
+     * @param string $parent
+     * @param string $parentid
+     * @param Field $fields
+     * @param DB $database
+     * @throws FunctionNotSupported
+     */
 	public function getFromParent( string $parent, string $parentid, Field $fields, DB $database){
 		throw new FunctionNotSupported( "getFromParent");
 	}
-	
-	/**
-	 * 
-	 * @param string $id
-	 * @param Field $fields
-	 * @param DB $database
-	 * @param Nodes $nodes
-	 */
+
+    /**
+     *
+     * @param string $id
+     * @param Field $fields
+     * @param DB $database
+     * @param Nodes $nodes
+     * @throws FunctionNotSupported
+     */
 	public function get( string $id, Field $fields, DB $database){
 		throw new FunctionNotSupported( "get");
 	}
-	
-	
-	/**
-	 * 
-	 * @param Field $fields
-	 * @param DB $database
-	 */
+
+
+    /**
+     *
+     * @param Field $fields
+     * @param DB $database
+     * @throws FunctionNotSupported
+     */
 	public function getAll( Field $fields, DB $database){
 		throw new FunctionNotSupported( "getAll");
 	}
-	
-	/**
-	 * 
-	 * @param array $data
-	 * @param DB $database
-	 * @param Nodes $nodes
-	 * @return bool
-	 */
+
+    /**
+     *
+     * @param array $data
+     * @param DB $database
+     * @param Nodes $nodes
+     * @return bool
+     * @throws FunctionNotSupported
+     */
 	public function post( array $data, DB $database) : bool{
 		throw new FunctionNotSupported( "post");
 	}

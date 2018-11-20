@@ -1,6 +1,7 @@
 <?php namespace cov\utils\api\rest;
 
 use cov\core\debug\Logger;
+use cov\utils\api\auth\Authenticator;
 use cov\utils\db\DB;
 
 /**
@@ -9,8 +10,14 @@ use cov\utils\db\DB;
  *
  */
 class DefaultEndpoint implements Endpoint {
-	
-	/**
+
+    private $auth;
+
+    public function __construct(Authenticator $auth = null){
+        $this->auth = $auth;
+    }
+
+    /**
 	 *
 	 * {@inheritDoc}
 	 * @see \cov\utils\api\rest\Endpoint::main()
@@ -19,7 +26,8 @@ class DefaultEndpoint implements Endpoint {
 		return new Response( 
 				Status::getStatus("OK"),
 				array(
-						"time" => time()
+				    "time" => time(),
+                    "auth" => $this->auth === null ? null : $this->auth->getRealm()
 				)
 		);
 	}
