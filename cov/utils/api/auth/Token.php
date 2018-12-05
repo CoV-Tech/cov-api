@@ -15,8 +15,9 @@ class Token implements JsonSerializable {
      * @var string $username
      * @var int $time_given
      * @var bool $valid
+     * @var string $refresh
      */
-    private $id, $username, $time_given, $valid;
+    private $id, $username, $time_given, $valid, $refresh;
 
     /**
      * Token constructor.
@@ -25,11 +26,19 @@ class Token implements JsonSerializable {
      * @param int $time_given
      * @param bool $valid
      */
-    public function __construct( string $id, string $username, int $time_given, bool $valid = true){
+    public function __construct( string $id, string $username, int $time_given, bool $valid = true, string $refresh = null){
         $this->id = $id;
         $this->username = $username;
         $this->time_given = $time_given;
         $this->valid = $valid;
+        $this->refresh = $refresh !== null && strlen($refresh) > 0 ? $refresh : null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRefresh(){
+        return $this->refresh;
     }
 
     /**
@@ -76,7 +85,8 @@ class Token implements JsonSerializable {
             "id" => $this->getId(),
             "username" => $this->getUsername(),
             "time_given" => $this->getTimeGiven(),
-            "valid" => $this->isValid()
+            "valid" => $this->isValid(),
+            "refresh" => $this->getRefresh()
         );
     }
 }

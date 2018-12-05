@@ -10,16 +10,15 @@ use cov\utils\db\DB;
  * @author Ukhando
  *
  */
-class LogoutEndpoint extends AuthEndpoint{
+class CheckEndpoint extends AuthEndpoint{
 
     /**
-     * LogoutEndpoint constructor.
+     * CheckEndpoint constructor.
      * @param Authenticator $authenticator
      */
     public function __construct( Authenticator $authenticator){
         parent::__construct( $authenticator);
     }
-
 
     /**
      *
@@ -32,7 +31,7 @@ class LogoutEndpoint extends AuthEndpoint{
         $auth = $request->getHeader( "Authorization");
         $autharr = $auth !== null ? explode( " ", $auth) : null;
         $token = isset( $autharr[1]) ?  $autharr[1] : null;
-        if ($this->logout($token, $db)){
+        if ($token !== null && $this->check($token, $db)){
             return Response::createFromStatus("OK");
         }else{
             return Response::createFromStatus("not authorized");

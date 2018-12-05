@@ -39,7 +39,7 @@ class SystemInfo
 			fclose($fh);
 		}
 		// KB RAM Total
-		return $result;
+		return $result + 0;
 	}
 	/**
 	 * Return free RAM in Bytes.
@@ -69,7 +69,7 @@ class SystemInfo
 			fclose($fh);
 		}
 		// KB RAM Total
-		return $result;
+		return $result + 0;
 	}
 	/**
 	 * Return RAM usage.
@@ -99,9 +99,9 @@ class SystemInfo
 				if ($line != "Name=$path") {
 					continue;
 				}
-				$result['free'] = explode('=', $lines[$index - 1])[1];
-				$result['size'] = explode('=', $lines[$index + 1])[1];
-				$result['used'] = $result['size'] - $result['free'];
+				$result['free'] =  explode('=', $lines[$index - 1])[1] + 0;
+				$result['size'] =  explode('=', $lines[$index + 1])[1] + 0;
+                $result['used'] =  $result['size'] - $result['free'];
 				break;
 			}
 		} else {
@@ -182,7 +182,7 @@ class SystemInfo
 					$total = $ma[1] + $ma[2] + $ma[3] + $ma[4] + $ma[5] + $ma[6] + $ma[7] + $ma[8] + $ma[9];
 					//$totalCpu = $ma[1] + $ma[2] + $ma[3];
 					//$result = (100 / $total) * $totalCpu;
-					$ma['total'] = $total;
+					$ma['total'] = (int) $total;
 					$checks[] = $ma;
 					break;
 				}

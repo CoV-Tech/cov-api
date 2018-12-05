@@ -48,9 +48,53 @@ abstract class Authenticator
             $id = base64_encode(random_bytes( 100));
             $id = substr( $id, 0, 200);
         }while ($this->getToken($id, $db) !== null);
-        $token = new Token( $id, $username, time());
+        $refresh = base64_encode(random_bytes( 100));
+        $token = new Token( $id, $username, time(), true, $refresh);
         $this->storeToken( $token, $db);
         return $token;
+    }
+
+    /**
+     * @param $token
+     * @param $refreshToken
+     * @param $db
+     * @return Token|null
+     */
+    public function refresh( $token, $refreshToken, $db){
+        $t = $this->getToken( $token, $db);
+        if ($t === null || !$t->isValid()){
+            return null;
+        }
+        if ($t->getRefresh() === $refreshToken){
+            do{
+                $id = base64_encode(random_bytes( 100));
+                $id = substr( $id, 0, 200);
+            }while ($this->getToken($id, $db) !== null);
+            $refresh = base64_encode(random_bytes( 100));
+            $token = new Token( $id, $t->getUsername(), time(), true, $refresh);
+            $old = new Token( $t->getId(), $t->getUsername(), $t->getTimeGiven(), false, $t->getRefresh());
+            $this->storeToken( $token, $db);
+            $this->storeToken( $old, $db);
+            return $token;
+        }else{
+            echo $t->getRefresh()."\n";
+            echo $refreshToken."\n";
+            return null;
+        }
+    }
+
+    /**
+     * @param string $token
+     * @param DB $db
+     */
+    public function logout( string $token, DB $db){
+        $t = $this->getToken( $token, $db);
+        if ($t === null || !$t->isValid()){
+            return false;
+        }
+        $n = new Token($t->getId(), $t->getUsername(), $t->getTimeGiven(), false, $t->getRefresh());
+        $this->storeToken($n, $db);
+        return true;
     }
 
     /**
@@ -95,6 +139,5 @@ abstract class Authenticator
      */
     public abstract function checkUsernamePasswordCombo( string $username, string $password, DB $db, Logger $logger) : bool;
 
-    public function logout($token, $db){}
 
 }

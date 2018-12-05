@@ -45,4 +45,22 @@ abstract class AuthEndpoint implements Endpoint{
     public function logout( string $token, DB $db){
         return $this->authenticator->logout( $token, $db);
     }
+
+    /**
+     * @param string $token
+     * @param DB $db
+     * @return bool
+     */
+    public function check( string $token, DB $db){
+        return $this->authenticator->isTokenValid( $token, $db);
+    }
+
+    /**
+     * @param string $token
+     * @param string $refresh
+     * @param DB $db
+     */
+    public function refresh( string $token, string $refresh, DB $db){
+        return $this->authenticator->refresh( $token, $refresh, $db);
+    }
 }

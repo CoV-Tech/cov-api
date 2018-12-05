@@ -10,16 +10,15 @@ use cov\utils\db\DB;
  * @author Ukhando
  *
  */
-class LogoutEndpoint extends AuthEndpoint{
+class RefreshEndpoint extends AuthEndpoint{
 
     /**
-     * LogoutEndpoint constructor.
+     * RefreshEndpoint constructor.
      * @param Authenticator $authenticator
      */
     public function __construct( Authenticator $authenticator){
         parent::__construct( $authenticator);
     }
-
 
     /**
      *
@@ -32,10 +31,16 @@ class LogoutEndpoint extends AuthEndpoint{
         $auth = $request->getHeader( "Authorization");
         $autharr = $auth !== null ? explode( " ", $auth) : null;
         $token = isset( $autharr[1]) ?  $autharr[1] : null;
-        if ($this->logout($token, $db)){
-            return Response::createFromStatus("OK");
-        }else{
+        $refresh = $request->getParameter( "refresh");
+        if ($token === null || $refresh === null){
             return Response::createFromStatus("not authorized");
+        }
+        $refresh = str_replace( " ", "+", $refresh);
+        $newToken = $this->refresh( $token, $refresh, $db);
+        if ($newToken !== null){
+            return Response::createFromStatus("OK", array("token" => $newToken));
+        }else{
+            return Response::createFromStatus("not authorized", array( "token" => $token, "refresh" => $refresh));
         }
     }
 }

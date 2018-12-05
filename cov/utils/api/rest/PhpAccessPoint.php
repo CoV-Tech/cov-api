@@ -2,7 +2,10 @@
 
 use cov\core\debug\Logger;
 use cov\utils\api\auth\Authenticator;
+use cov\utils\api\auth\CheckEndpoint;
 use cov\utils\api\auth\LoginEndpoint;
+use cov\utils\api\auth\LogoutEndpoint;
+use cov\utils\api\auth\RefreshEndpoint;
 use cov\utils\db\DB;
 use \Exception as Exception;
 
@@ -32,13 +35,16 @@ class PhpAccessPoint {
 	    $this->devs = array();
 		$routes->addRoute( "GET", "", new DefaultEndpoint($auth));
 		if ($auth !== null){
-		    $routes->addRoute( "POST", "auth/login",  new LoginEndpoint(  $auth)); /* LOGIN   */
-            //$routes->addRoute( "GET",  "auth/logout", new LogoutEndpoint( $auth)); /* LOGOUT  */
-            //$routes->addRoute( "GET",  "auth/token",  null); /* CHECK   */
-            //$routes->addRoute( "POST", "auth/token",  null); /* REFRESH */
+		    $routes->addRoute( "POST", "auth/login",  new LoginEndpoint(   $auth)); /* LOGIN   */
+            $routes->addRoute( "GET",  "auth/logout", new LogoutEndpoint(  $auth)); /* LOGOUT  */
+            $routes->addRoute( "GET",  "auth/token",  new CheckEndpoint(   $auth)); /* CHECK   */
+            $routes->addRoute( "POST", "auth/token",  new RefreshEndpoint( $auth)); /* REFRESH */
             $this->devs[] = $routes->getBaseUrl()."/auth/login";
+            $this->devs[] = $routes->getBaseUrl()."/auth/token";
+            $this->devs[] = $routes->getBaseUrl()."/auth/logout";
         }
         $this->devs[] = $routes->getBaseUrl();
+        $this->devs[] = $routes->getBaseUrl()."/dev";
 		if (!$routes->routeExists( "GET", "dev")){
 			$routes->addRoute("GET",  "dev", new DevEndpoint( $routes));
 		}
