@@ -35,6 +35,7 @@ class HttpAccessPoint {
 		$routes->addRoute("GET",  "node/{node}/{id}", new GetNodeEndpoint(  $routes, $nodes));
 		$routes->addRoute("GET",  "node/{node}",      new GetNodeEndpoint(  $routes, $nodes));
 		$routes->addRoute("POST", "node/{node}",      new POSTNodeEndpoint( $routes, $nodes));
+        $routes->addRoute("POST", "node/{node}/{id}", new POSTNodeEndpoint( $routes, $nodes));
 		$routes->addRoute("GET",  "dev",              new DevEndpoint(      $routes, $nodes));
 		if ($auth !== null){
             $this->accessPoint = new AccessPoint($logger, $version, $routes, $db, $auth);

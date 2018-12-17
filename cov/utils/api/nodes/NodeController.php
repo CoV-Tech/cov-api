@@ -89,5 +89,9 @@ abstract class NodeController {
 	public function post( array $data, DB $database) : bool{
 		throw new FunctionNotSupported( "post");
 	}
+
+	public function update( array $data, DB $database, string $id) : bool{
+        throw new FunctionNotSupported( "update");
+    }
 	
 }

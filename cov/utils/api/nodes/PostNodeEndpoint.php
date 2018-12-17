@@ -41,9 +41,22 @@ class PostNodeEndpoint extends NodeEndpoint {
 				return Response::createFromStatus("route not supported");
 			}
 		}
-		$controller = $this->getController( $node);
-		$ret = $controller->post( json_decode( $request->getBody(), true), $db);
-		return new Response( Status::getStatus("OK"), $ret);
+		if ($request->getBody() === null || json_decode( $request->getBody(), true) === null){
+		    return new Response(Status::getStatus("no data given"), $request->getBody());
+        }
+		$id = $request->getPath( "id");
+        $controller = $this->getController( $node);
+        $ret = false;
+		if ($id !== null){
+            $ret = $controller->update( json_decode( $request->getBody(), true), $db, $id);
+        }else{
+            $ret = $controller->post( json_decode( $request->getBody(), true), $db);
+        }
+        if ($ret){
+            return new Response( Status::getStatus("CREATED"), $ret);
+        }else{
+            return new Response( Status::getStatus("invalid"), $ret);
+        }
 	}
 	
 }

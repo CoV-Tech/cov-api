@@ -71,7 +71,7 @@ class HttpAccessPoint {
 		$url = explode( "?", $_SERVER['REQUEST_URI']);
 		$url = explode( "/", $url[0]);
 		$http = isset($_GET["http"]) ? $_GET["http"] : true;
-		$body = "";
+		$body = file_get_contents('php://input');
 		$basePlace = explode("/", $this->getBaseUrl())[0];
 		$i = array_search($basePlace, $url);
 		$newUrl = array();
@@ -139,7 +139,6 @@ class HttpAccessPoint {
 			$responseText = json_encode($responseJson, JSON_UNESCAPED_SLASHES);
 		}
 		$last_updated = isset($responseJson["response"]["last_updated"]) ? $responseJson["response"]["last_updated"] : time();
-		
 		header( "Content-Type: application/json");
 		header( "Access-Control-Allow-Origin: *");
 		header( "Access-Control-Allow-Headers: *");

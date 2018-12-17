@@ -113,21 +113,27 @@ class Status implements JsonSerializable{
 	public static function getStatus( string $message){
 		switch( $message){
 			case "OK":
-				return new Status(1, "OK", 200);
+				return new Status( 1, "OK", 200);
+            case "CREATED":
+                return new Status( 10, "CREATED", 201);
 			case "route not supported":
-				return new Status(2, "route not supported", 501);
+				return new Status( 2, "route not supported", 501);
 			case "multiple routes":
-				return new Status(3, "multiple routes, can't chose", 500);
+				return new Status( 3, "multiple routes, can't chose", 500);
 			case "unknown route error, no endPoint found":
-				return new Status(4, "unknown route error, no endPoint found", 500);
+				return new Status( 4, "unknown route error, no endPoint found", 500);
 			case "unknown route error, no response given":
-				return new Status(5, "unknown route error, no response given", 500);
+				return new Status( 5, "unknown route error, no response given", 500);
 			case "node doesn't exist":
-				return new Status(6, "node not supported", 501);
+				return new Status( 6, "node not supported", 501);
 			case "INTERNAL ERROR":
-				return new Status(7, "INTERNAL ERROR WHILE PARSING THE RESPONSE", 500);
+				return new Status( 7, "INTERNAL ERROR WHILE PARSING THE RESPONSE", 500);
             case "not authorized":
                 return new Status( 8, "not authorized", 401);
+            case "no data given":
+                return new Status( 9, "no data given", 400);
+            case "invalid":
+                return new Status( 11, "invalid post request", 400);
 			default:
 				null;
 		}
